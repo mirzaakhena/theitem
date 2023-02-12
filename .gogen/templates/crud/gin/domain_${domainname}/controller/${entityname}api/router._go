@@ -1,0 +1,20 @@
+package {{LowerCase .EntityName}}api
+
+import (
+    "github.com/gin-gonic/gin"
+	"{{.PackagePath}}/shared/gogen"
+    "{{.PackagePath}}/shared/infrastructure/logger"
+    "{{.PackagePath}}/shared/infrastructure/token"
+)
+
+func (r *controller) RegisterRouter() {
+
+    resource := r.Router.Group("/api/v1", r.authentication())
+
+	resource.POST("/{{LowerCase .EntityName}}", r.authorization(), r.run{{PascalCase .EntityName}}CreateHandler())
+	resource.GET("/{{LowerCase .EntityName}}", r.authorization(), r.getAll{{PascalCase .EntityName}}Handler())
+	resource.GET("/{{LowerCase .EntityName}}/:{{LowerCase .EntityName}}_id", r.authorization(), r.getOne{{PascalCase .EntityName}}Handler())
+	resource.PUT("/{{LowerCase .EntityName}}/:{{LowerCase .EntityName}}_id", r.authorization(), r.run{{PascalCase .EntityName}}UpdateHandler())
+	resource.DELETE("/{{LowerCase .EntityName}}/:{{LowerCase .EntityName}}_id", r.authorization(), r.run{{PascalCase .EntityName}}DeleteHandler())
+
+}

@@ -1,0 +1,7 @@
+package {{LowerCase .ControllerName}}
+
+// RegisterRouter registering all the router
+func (r *controller) RegisterRouter() {
+    //!
+
+}

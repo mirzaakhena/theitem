@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+
+    mysqldb:
+        image: mysql
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=12345
+            - MYSQL_DATABASE=itemdb
+        ports:
+            - "3306:3306"
+
+    mongodb:
+        image: mongo
+        ports:
+            - "27017:27017"
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=root
+            - MONGO_INITDB_ROOT_PASSWORD=12345
+
+    myapp:
+        container_name: theitem
+        build: .
+        entrypoint: "./theitem appitem"
+        depends_on:
+            - mysqldb
+            - mongodb
+        environment:
+            - CONFIG_FILE=config.prod.json
+        ports:
+            - "8080:8080"

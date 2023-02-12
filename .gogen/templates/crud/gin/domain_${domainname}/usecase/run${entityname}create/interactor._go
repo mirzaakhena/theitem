@@ -1,0 +1,37 @@
+package run{{LowerCase .EntityName}}create
+
+import (
+	"context"
+	"{{.PackagePath}}/domain_{{.DomainName}}/model/entity"
+)
+
+//go:generate mockery --name Outport -output mocks/
+
+type Run{{PascalCase .EntityName}}CreateInteractor struct {
+	outport Outport
+}
+
+func NewUsecase(outputPort Outport) Inport {
+	return &Run{{PascalCase .EntityName}}CreateInteractor{
+		outport: outputPort,
+	}
+}
+
+func (r *Run{{PascalCase .EntityName}}CreateInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
+
+	res := &InportResponse{}
+
+    {{CamelCase .EntityName}}Obj, err := entity.New{{PascalCase .EntityName}}(req.{{PascalCase .EntityName}}CreateRequest)
+    if err != nil {
+        return nil, err
+    }
+
+    err = r.outport.Save{{PascalCase .EntityName}}(ctx, {{CamelCase .EntityName}}Obj)
+    if err != nil {
+        return nil, err
+    }
+
+    res.{{PascalCase .EntityName}}ID = {{CamelCase .EntityName}}Obj.ID
+
+	return res, nil
+}

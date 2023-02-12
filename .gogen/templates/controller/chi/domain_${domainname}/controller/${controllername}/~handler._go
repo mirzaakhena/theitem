@@ -1,0 +1,62 @@
+package {{LowerCase .ControllerName}}
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"strings"
+	"github.com/go-chi/render"
+	"{{.PackagePath}}/shared/gogen"
+	"{{.PackagePath}}/shared/model/payload"
+	"{{.PackagePath}}/domain_{{.DomainName}}/usecase/{{LowerCase .Usecase.Name}}"
+	"{{.PackagePath}}/shared/infrastructure/logger"
+	"{{.PackagePath}}/shared/util"
+)
+
+func (r *controller) {{CamelCase .Usecase.Name}}Handler() http.HandlerFunc {
+
+	type InportRequest = {{LowerCase .Usecase.Name}}.InportRequest
+	type InportResponse = {{LowerCase .Usecase.Name}}.InportResponse
+
+	inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
+
+	type request struct {
+	}
+
+	type response struct {
+	}
+
+	return func(hw http.ResponseWriter, hr *http.Request) {
+
+		traceID := util.GenerateID(16)
+
+		ctx := logger.SetTraceID(context.Background(), traceID)
+
+		var jsonReq request
+		if err := json.NewDecoder(hr.Body).Decode(&jsonReq); err != nil {
+			r.log.Error(ctx, err.Error())
+			http.Error(hw, util.MustJSON(payload.NewErrorResponse(err, traceID)), http.StatusBadRequest)
+			return
+		}
+
+		var req InportRequest
+
+		r.log.Info(ctx, util.MustJSON(req))
+
+		res, err := inport.Execute(ctx, req)
+		if err != nil {
+			r.log.Error(ctx, err.Error())
+			http.Error(hw, util.MustJSON(payload.NewErrorResponse(err, traceID)), http.StatusBadRequest)
+			return
+		}
+
+		var jsonRes response
+		_ = res
+
+		r.log.Info(ctx, util.MustJSON(jsonRes))
+		render.JSON(hw, hr, payload.NewSuccessResponse(jsonRes, traceID))
+
+	}
+
+}

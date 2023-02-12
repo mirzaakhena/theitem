@@ -1,0 +1,46 @@
+package run{{LowerCase .EntityName}}update
+
+import (
+	"context"
+	"{{.PackagePath}}/domain_{{.DomainName}}/model/entity"
+)
+
+//go:generate mockery --name Outport -output mocks/
+
+type Run{{PascalCase .EntityName}}UpdateInteractor struct {
+	outport Outport
+}
+
+func NewUsecase(outputPort Outport) Inport {
+	return &Run{{PascalCase .EntityName}}UpdateInteractor{
+		outport: outputPort,
+	}
+}
+
+func (r *Run{{PascalCase .EntityName}}UpdateInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
+
+	res := &InportResponse{}
+
+    {{CamelCase .EntityName}}Obj, err := r.outport.FindOne{{PascalCase .EntityName}}ByID(ctx, req.{{PascalCase .EntityName}}ID)
+    if err != nil {
+        return nil, err
+    }
+    if {{CamelCase .EntityName}}Obj == nil {
+        return nil, fmt.Errorf("object not found")
+    }
+
+    // you may need to check the authorization part here
+    // is this user allowed to perform this action ?
+
+    err = {{CamelCase .EntityName}}Obj.Update(req.{{PascalCase .EntityName}}UpdateRequest)
+    if err != nil {
+        return nil, err
+    }
+
+    err = r.outport.Save{{PascalCase .EntityName}}(ctx, {{CamelCase .EntityName}}Obj)
+    if err != nil {
+        return nil, err
+    }
+
+	return res, nil
+}

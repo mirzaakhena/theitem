@@ -1,0 +1,113 @@
+package {{LowerCase .GatewayName}}
+
+import (
+	"context"
+	"{{.PackagePath}}/shared/gogen"
+    "{{.PackagePath}}/shared/config"
+    "{{.PackagePath}}/shared/infrastructure/database"
+	"{{.PackagePath}}/domain_{{.DomainName}}/model/entity"
+	"{{.PackagePath}}/shared/infrastructure/logger"
+
+    // "gorm.io/driver/sqlite"
+    // "gorm.io/gorm"
+)
+
+type gateway struct {
+    *database.MongoWithTransaction
+    log     logger.Logger
+    appData gogen.ApplicationData
+    config  *config.Config
+}
+
+// NewGateway ...
+func NewGateway(log logger.Logger, appData gogen.ApplicationData, cfg *config.Config) (*gateway) {
+
+	// db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	// if err != nil {
+	// 	panic("failed to connect database")
+	// }
+	// err = db.AutoMigrate(&entity.Person{})
+	// if err != nil {
+	// 	panic("cannot create schema")
+	// }
+
+	return &gateway{
+	    log:     log,
+		appData: appData,
+		config:  cfg,
+		// db:      db,
+	}
+}
+
+{{range .Methods}} {{if StartWith (LowerCase .MethodName) "save"}}
+func (r *gateway) {{.MethodName}}{{.MethodSignature}} {
+    r.log.Info(ctx, "called")
+
+	//info, err := r.SaveOrUpdate(ctx, "DBName", "order", obj.OrderID, obj)
+	//if err != nil {
+	//	r.log.Error(ctx, err.Error())
+	//	return err
+	//}
+	//
+	//r.log.Info(ctx, "%s", info)
+
+    return {{.DefaultReturnVal}}
+}
+{{else if StartWith (LowerCase .MethodName) "find"}}
+func (r *gateway) {{.MethodName}}{{.MethodSignature}} {
+    r.log.Info(ctx, "called")
+
+	//var objs []*entity.Order
+	//
+	//coll := r.MongoClient.Database(DBName).Collection("order")
+	//
+	//criteria := bson.M{}
+	//
+	//if req.OrderID != "" {
+	//	criteria["order_id"] = primitive.Regex{Pattern: req.OrderID, Options: "i"}
+	//}
+	//
+	//if req.Status != "" {
+	//	criteria["order_status"] = primitive.Regex{Pattern: req.Status, Options: "i"}
+	//}
+	//
+	//skip := req.Size * (req.Page - 1)
+	//limit := req.Size
+	//
+	//countOpts := options.CountOptions{
+	//	Limit: &limit,
+	//	Skip:  &skip,
+	//}
+	//
+	//count, err := coll.CountDocuments(ctx, criteria, &countOpts)
+	//if err != nil {
+	//	r.log.Error(ctx, err.Error())
+	//	return nil, 0, err
+	//}
+	//
+	//findOpts := options.FindOptions{
+	//	Limit: &limit,
+	//	Skip:  &skip,
+	//	//Sort:  bson.M{"updated_date": -1},
+	//}
+	//
+	//cursor, err := coll.Find(ctx, criteria, &findOpts)
+	//if err != nil {
+	//	r.log.Error(ctx, err.Error())
+	//	return nil, 0, err
+	//}
+	//
+	//if err := cursor.All(ctx, &objs); err != nil {
+	//	r.log.Error(ctx, err.Error())
+	//	return nil, 0, err
+	//}
+
+    return {{.DefaultReturnVal}}
+}
+{{else}}
+func (r *gateway) {{.MethodName}}{{.MethodSignature}} {
+    r.log.Info(ctx, "called")
+
+    return {{.DefaultReturnVal}}
+}
+{{end}} {{end}}

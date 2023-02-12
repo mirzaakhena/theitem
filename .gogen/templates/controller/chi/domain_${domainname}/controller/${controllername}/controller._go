@@ -1,0 +1,37 @@
+package {{LowerCase .ControllerName}}
+
+import (
+	"{{.PackagePath}}/shared/gogen"
+	"{{.PackagePath}}/shared/config"
+	"{{.PackagePath}}/shared/infrastructure/logger"
+	"{{.PackagePath}}/shared/infrastructure/token"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"net/http"
+)
+
+type controller struct {
+	gogen.ControllerStarter             // built-in http that has gracefullyshutdown
+	gogen.UsecaseRegisterer             // collect all the inports
+	Router                  *chi.Mux  // the router from preference web framework
+	log                     logger.Logger
+	cfg                     *config.Config
+	jwtToken                token.JWTToken
+}
+
+func NewController(appData gogen.ApplicationData, log logger.Logger, cfg *config.Config, jwtToken token.JWTToken) gogen.ControllerRegisterer {
+
+	router := chi.NewRouter()
+
+	address := cfg.Servers[appData.AppName].Address
+
+	return &controller{
+		UsecaseRegisterer: gogen.NewBaseController(),
+		ControllerStarter: NewGracefullyShutdown(log, router, address),
+		Router:            router,
+		log:               log,
+		cfg:               cfg,
+		jwtToken:          jwtToken,
+	}
+
+}

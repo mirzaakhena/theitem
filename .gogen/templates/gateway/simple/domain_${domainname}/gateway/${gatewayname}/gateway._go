@@ -1,0 +1,25 @@
+package {{LowerCase .GatewayName}}
+
+import (
+	"context"
+	"{{.PackagePath}}/shared/gogen"
+    "{{.PackagePath}}/shared/config"
+	"{{.PackagePath}}/domain_{{.DomainName}}/model/entity"
+	"{{.PackagePath}}/shared/infrastructure/logger"
+)
+
+type gateway struct {
+    appData gogen.ApplicationData
+    config  *config.Config
+    log     logger.Logger
+}
+
+// NewGateway ...
+func NewGateway(log logger.Logger, appData gogen.ApplicationData, cfg *config.Config) (*gateway) {
+
+	return &gateway{
+	    log:     log,
+		appData: appData,
+		config:  cfg,
+	}
+}

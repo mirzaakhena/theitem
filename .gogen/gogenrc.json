@@ -1,0 +1,6 @@
+{
+ "domain": "item",
+ "controller": "gin",
+ "gateway": "simple",
+ "crud": "gin"
+}

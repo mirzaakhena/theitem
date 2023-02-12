@@ -1,0 +1,14 @@
+{
+  "database": {
+    "username": "root",
+    "password": "12345",
+    "host": "localhost",
+    "port": "27017",
+    "db_name": "itemdb"
+  },
+  "servers": {
+    "appItem": {
+      "address": ":8080"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+<template>
+  <Sidebar title="Item App" :sections="sections"/>
+  <div style="margin-left: 300px; margin-right: 20px; margin-top: 20px">
+    <router-view/>
+  </div>
+</template>
+
+<script setup>
+
+import Sidebar from "../components/sidebar/Sidebar.vue";
+
+const sections = [
+  {
+    header: "Section", menus: [
+      {href: '/item', title: 'Item', icon: '#gear-fill',},
+      // {href: '/order', title: 'Order', icon: '#speedometer2',},
+      // {href: '/payment', title: 'Payment', icon: '#tools',},
+    ]
+  },
+]
+
+</script>

@@ -1,0 +1,26 @@
+package {{LowerCase .ControllerName}}
+
+import (
+	"net/http"
+)
+
+func (r *controller) authentication(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+        // ...
+	}
+}
+
+func (r *controller) authorization(next http.HandlerFunc) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		authorized := true
+
+		if !authorized {
+			http.Error(w, "Not Authorized", http.StatusForbidden)
+			return
+		}
+
+		next(w, r)
+	}
+}

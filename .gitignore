@@ -1,0 +1,7 @@
+.idea/
+.DS_Store
+*.app
+*.exe
+*.log
+*.db
+*/node_modules/

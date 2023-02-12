@@ -1,0 +1,18 @@
+package getone{{LowerCase .EntityName}}
+
+import (
+	"context"
+	"time"
+	"{{.PackagePath}}/domain_{{LowerCase .DomainName}}/model/entity"
+	"{{.PackagePath}}/shared/gogen"
+)
+
+type Inport = gogen.Inport[InportRequest, InportResponse]
+
+type InportRequest struct {
+	{{PascalCase .EntityName}}ID vo.{{PascalCase .EntityName}}ID
+}
+
+type InportResponse struct {
+	{{PascalCase .EntityName}} *entity.{{PascalCase .EntityName}}
+}

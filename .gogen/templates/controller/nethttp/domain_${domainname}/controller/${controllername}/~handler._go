@@ -1,0 +1,78 @@
+package {{LowerCase .ControllerName}}
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"strings"
+	"{{.PackagePath}}/domain_{{.DomainName}}/usecase/{{LowerCase .Usecase.Name}}"
+	"{{.PackagePath}}/shared/gogen"
+	"{{.PackagePath}}/shared/infrastructure/logger"
+	"{{.PackagePath}}/shared/util"
+	"{{.PackagePath}}/shared/model/payload"
+)
+
+func (r *controller) {{CamelCase .Usecase.Name}}Handler(method string) http.HandlerFunc {
+
+    type InportRequest = {{LowerCase .Usecase.Name}}.InportRequest
+	type InportResponse = {{LowerCase .Usecase.Name}}.InportResponse
+
+    inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
+
+	type request struct {  {{range .Usecase.InportRequestFields}} {{if ne .Name "Now"}}
+        {{.Name}} {{.Type}} {{if StartWith (LowerCase $.Usecase.Name) "get"}} `form:"{{SnakeCase .Name}},omitempty,default=0"` {{else}} `json:"{{SnakeCase .Name}}"` {{end}} {{end}} {{end}}
+	}
+
+	type response struct { {{range .Usecase.InportResponseFields}}
+        {{.Name}} {{.Type}} `json:"{{SnakeCase .Name}}"` {{end}}
+	}
+
+	return func(rw http.ResponseWriter, rq *http.Request) {
+
+		if rq.Method != strings.ToUpper(method) {
+			http.Error(rw, "", http.StatusBadRequest)
+			return
+		}
+
+		// for accessing query params /{{CamelCase .Usecase.Name}}?id=123
+		// rq.URL.Query().Get("id")
+
+		traceID := util.GenerateID(16)
+
+		ctx := logger.SetTraceID(context.Background(), traceID)
+
+		var jsonReq request
+		err := json.NewDecoder(rq.Body).Decode(&jsonReq)
+		if err != nil {
+			r.log.Error(ctx, err.Error())
+			http.Error(rw, util.MustJSON(payload.NewErrorResponse(err, traceID)), http.StatusBadRequest)
+			return
+		}
+
+		var req {{LowerCase .Usecase.Name}}.InportRequest {{range .Usecase.InportRequestFields}}{{if eq .Name "Now"}}
+		req.Now = time.Now(){{ else }}
+		req.{{.Name}} = jsonReq.{{.Name}}{{ end }}{{ end }}
+
+		r.log.Info(ctx, util.MustJSON(req))
+
+		res, err := inport.Execute(ctx, req)
+		if err != nil {
+			r.log.Error(ctx, err.Error())
+			http.Error(rw, util.MustJSON(payload.NewErrorResponse(err, traceID)), http.StatusBadRequest)
+			return
+		}
+
+		var jsonRes response {{ if eq (len .Usecase.InportResponseFields) 0 }}
+        _ = res {{else}} {{range .Usecase.InportResponseFields}}
+        jsonRes.{{.Name}} = res.{{.Name}}{{ end }} {{ end }}
+
+		r.log.Info(ctx, util.MustJSON(jsonRes))
+		_, err = fmt.Fprint(rw, payload.NewSuccessResponse(jsonRes, traceID))
+		if err != nil {
+			r.log.Error(ctx, err.Error())
+			http.Error(rw, util.MustJSON(payload.NewErrorResponse(err, traceID)), http.StatusBadRequest)
+			return
+		}
+
+	}
+}

@@ -1,0 +1,6 @@
+package {{LowerCase .ControllerName}}
+
+func (r *controller) RegisterRouter() {
+    //!
+
+}
