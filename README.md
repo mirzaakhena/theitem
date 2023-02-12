@@ -71,16 +71,16 @@ Version 0.0.1
  - using env:   export GIN_MODE=release
  - using code:  gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] GET    /ping                     --> theitem/domain_item/controller/restapi.NewController.func1 (3 handlers)
-[GIN-debug] GET    /web/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
-[GIN-debug] HEAD   /web/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
-[GIN-debug] POST   /api/v1/items             --> theitem/domain_item/controller/restapi.(*controller).runItemCreateHandler.func1 (6 handlers)
-[GIN-debug] GET    /api/v1/items             --> theitem/domain_item/controller/restapi.(*controller).getAllItemHandler.func1 (6 handlers)
-[GIN-debug] GET    /api/v1/items/:item_id    --> theitem/domain_item/controller/restapi.(*controller).getOneItemHandler.func1 (6 handlers)
-[GIN-debug] PUT    /api/v1/items/:item_id    --> theitem/domain_item/controller/restapi.(*controller).runItemUpdateHandler.func1 (6 handlers)
-[GIN-debug] DELETE /api/v1/items/:item_id    --> theitem/domain_item/controller/restapi.(*controller).runItemDeleteHandler.func1 (6 handlers)
+[GIN-debug] GET    /ping                           --> theitem/domain_item/controller/restapi.NewController.func1 (3 handlers)
+[GIN-debug] GET    /web/*filepath                  --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] HEAD   /web/*filepath                  --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] POST   /api/v1/items                   --> theitem/domain_item/controller/restapi.(*controller).runItemCreateHandler.func1 (6 handlers)
+[GIN-debug] GET    /api/v1/items                   --> theitem/domain_item/controller/restapi.(*controller).getAllItemHandler.func1 (6 handlers)
+[GIN-debug] GET    /api/v1/items/:item_id          --> theitem/domain_item/controller/restapi.(*controller).getOneItemHandler.func1 (6 handlers)
+[GIN-debug] PUT    /api/v1/items/:item_id          --> theitem/domain_item/controller/restapi.(*controller).runItemUpdateHandler.func1 (6 handlers)
+[GIN-debug] DELETE /api/v1/items/:item_id          --> theitem/domain_item/controller/restapi.(*controller).runItemDeleteHandler.func1 (6 handlers)
 [GIN-debug] POST   /api/v1/items/:item_id/purchase --> theitem/domain_item/controller/restapi.(*controller).runItemPurchaseHandler.func1 (6 handlers)
-INFO  0000000000000000 server is running at :8080                                   restapi.(*gracefullyShutdown).Start:40
+INFO  0000000000000000 server is running at :8080      restapi.(*gracefullyShutdown).Start:40
 ```
 
 The API is running on port 8080. The port setting is in `config.json`. 
@@ -210,19 +210,47 @@ datasource := withmongodb.NewGateway(log, appData, cfg)
 ```
 And then adjust the `config.json` as necessary (please keep in mind by default, mongodb use port 27017)
 
-
 ## Run with Docker
 
 Before running with docker, first decide whether you want to run it by **SQLite**, **MySQL** or **MongoDB** 
 by switching the implementation in `application/app_appitem.go`.
 
-By default, this application use `config.json`. 
+By default (NOT using docker), this application use `config.json`. 
 In docker version, it uses different config which is in `config.prod.json`.
 You can change the setting via `docker-compose.yml`.
 
-Currently, file `docker-compose.yml` specify 2 database (mongodb and mysql) and 1 application (myapp).
-You don't need to run both database. You can disable one of them manually. 
-Or even disable all database option (in `docker-compose.yml`) if you choose the SQLite as database.
+Currently, file `docker-compose.yml` specify 2 database image (mongodb and mysql) and 1 application image (myapp).
+
+### using Docker and SQLite
+Since **SQLite** is a simple embedded database, we don't need to use any image. 
+By default, it will just run. 
+
+### using Docker and MySQL
+You need to enable this part on `docker-compose.yml`
+```text
+mysqldb:
+    image: mysql
+    restart: always
+    environment:
+        - MYSQL_ROOT_PASSWORD=12345
+        - MYSQL_DATABASE=itemdb
+    ports:
+        - "3306:3306"
+```
+Adjust the `config.prod.json` as necessary
+
+### using Docker and MongoDB
+You need to enable this part on `docker-compose.yml`
+```text
+mongodb:
+    image: mongo
+    ports:
+        - "27017:27017"
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=12345
+```
+Adjust the `config.prod.json` as necessary
 
 Run the docker compose (you may add `-d` for running it in background) 
 
