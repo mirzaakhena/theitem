@@ -30,7 +30,7 @@ Has a six use cases (`domain_item/usecase/`)
 6. runitemupdate   --> Update an Item
 ```
 
-Each use case, published via REST API (`domain_item/controller/restapi/router.go`)
+Each use case, published via REST API using [gin-gonic](https://github.com/gin-gonic/gin) (`domain_item/controller/restapi/router.go`)
 ```text
 runitemcreate   --> POST   /api/v1/items             
 getallitem      --> GET    /api/v1/items             
@@ -46,11 +46,12 @@ You can decide to run this application with 3 alternative database
 2. **MySQL** using Gorm (`domain_item/gateway/withsqlitedb`)
 3. Native **MongoDB** (`domain_item/gateway/withmongodb`)
 
-By default, it is running with **SQLite**.
+By default, it is running with **SQLite** db
 
 ## Run backend directly from code using SQLite
 
-Open first terminal, then download the dependency by call this command
+After git clone the code, open a terminal (we call it a first terminal), 
+then download the dependency by call this command
 
 ```shell
 $ go mod tidy
@@ -82,7 +83,10 @@ Version 0.0.1
 INFO  0000000000000000 server is running at :8080                                   restapi.(*gracefullyShutdown).Start:40
 ```
 
-When running with **SQLite** db, we only use the `db_name` field in `config.json` and ignore the other fields.
+The API is running on port 8080. The port setting is in `config.json`. 
+You can use postman or curl for accessing the API. But it is better to use the UI. Keep reading, because we also provide the UI.
+
+When running with **SQLite** db, we only use the `db_name` field in `config.json` and ignore the other database fields.
 ```json
 {
   "database": {
@@ -101,7 +105,7 @@ When running with **SQLite** db, we only use the `db_name` field in `config.json
 ```
 
 ## Run frontend from code independently (development mode)
-This application also has simple user interface (UI) for better experience and interaction. 
+This application also has simple user interface (UI) for better experience, interaction or just testing purpose. 
 The UI use all the capability of REST API.
 The frontend application using vue js under `web/` directory. 
 To follow the further instruction of using UI, make sure you already install nodejs in your system.
@@ -213,8 +217,12 @@ Before running with docker, first decide whether you want to run it by **SQLite*
 by switching the implementation in `application/app_appitem.go`.
 
 By default, this application use `config.json`. 
-In Docker version, it uses different config which is `config.prod.json`.
-You can change the setting via `docker-compose.yml`
+In docker version, it uses different config which is in `config.prod.json`.
+You can change the setting via `docker-compose.yml`.
+
+Currently, file `docker-compose.yml` specify 2 database (mongodb and mysql) and 1 application (myapp).
+You don't need to run both database. You can disable one of them manually. 
+Or even disable all database option (in `docker-compose.yml`) if you choose the SQLite as database.
 
 Run the docker compose (you may add `-d` for running it in background) 
 
@@ -317,10 +325,10 @@ GET    /api/v1/items
     page=1&
     size=2&
     rating=3&
-    reputation_badge=4&
+    reputation_badge=yellow&
     availability_more=0&
     availability_less=100&
-    category=6
+    category=photo
 
 RESPONSE OK
 {

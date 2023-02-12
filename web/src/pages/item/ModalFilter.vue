@@ -1,19 +1,42 @@
 <template>
   <MirzaModal id="modalFilter" ref="modalFilter" title="Filter Items" @submit="submitDataFilter">
+
     <div class="mb-3">
-      <label class="form-label">Name start with</label>
-      <input type="text" class="form-control" placeholder="Name Like" v-model="state.filter.name_like">
+      <label class="form-label">Rating (-1 for all)</label>
+      <input type="number" class="form-control" placeholder="use -1 for all" v-model="state.filter.rating">
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Date Start</label>
-      <input type="date" class="form-control" placeholder="Date Start" v-model="state.filter.date_start">
+      <label class="form-label">Category</label>
+      <select class="form-control" v-model="state.filter.category">
+        <option value="">All</option>
+        <option value="photo">Photo</option>
+        <option value="sketch">Sketch</option>
+        <option value="cartoon">Cartoon</option>
+        <option value="animation">Animation</option>
+      </select>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Date End</label>
-      <input type="date" class="form-control" placeholder="Date End" v-model="state.filter.date_end">
+      <label class="form-label">Reputation Badge</label>
+      <select class="form-control" v-model="state.filter.reputation_badge">
+        <option value="">All</option>
+        <option value="red">Red</option>
+        <option value="yellow">Yellow</option>
+        <option value="green">Green</option>
+      </select>
     </div>
+
+    <div class="mb-3">
+      <label class="form-label">Availability More</label>
+      <input type="number" class="form-control" placeholder="More than" v-model="state.filter.availability_more">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Availability Less</label>
+      <input type="number" class="form-control" placeholder="Less than" v-model="state.filter.availability_less">
+    </div>
+
   </MirzaModal>
 </template>
 
