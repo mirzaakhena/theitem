@@ -225,6 +225,24 @@ Currently, file `docker-compose.yml` specify 2 database image (mongodb and mysql
 Since **SQLite** is a simple embedded database, we don't need to use any image. 
 By default, it will just run. 
 
+The current `config.prod.json` for **SQLite**. It only use the `db_name` and ignore all the other database fields.
+```json
+{
+  "database": {
+    "username": "root",
+    "password": "12345",
+    "host": "mysqldb",
+    "port": "3306",
+    "db_name": "itemdb"
+  },
+  "servers": {
+    "appItem": {
+      "address": ":8080"
+    }
+  }
+}
+```
+
 ### using Docker and MySQL
 You need to enable this part on `docker-compose.yml`
 ```text
@@ -237,7 +255,25 @@ mysqldb:
     ports:
         - "3306:3306"
 ```
-Adjust the `config.prod.json` as necessary
+
+The `config.prod.json` for **MySQL** (pay attention to the host and port)
+
+```json
+{
+  "database": {
+    "username": "root",
+    "password": "12345",
+    "host": "mysqldb",
+    "port": "3306",
+    "db_name": "itemdb"
+  },
+  "servers": {
+    "appItem": {
+      "address": ":8080"
+    }
+  }
+}
+```
 
 ### using Docker and MongoDB
 You need to enable this part on `docker-compose.yml`
@@ -250,7 +286,23 @@ mongodb:
         - MONGO_INITDB_ROOT_USERNAME=root
         - MONGO_INITDB_ROOT_PASSWORD=12345
 ```
-Adjust the `config.prod.json` as necessary
+Adjust the `config.prod.json` (change the host and port)
+```json
+{
+  "database": {
+    "username": "root",
+    "password": "12345",
+    "host": "mongodb",
+    "port": "27017",
+    "db_name": "itemdb"
+  },
+  "servers": {
+    "appItem": {
+      "address": ":8080"
+    }
+  }
+}
+```
 
 Run the docker compose (you may add `-d` for running it in background) 
 
