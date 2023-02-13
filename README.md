@@ -3,6 +3,24 @@
 This application developed using gogen framework code generator
 [Gogen Framework](https://github.com/mirzaakhena/gogen)
 
+We applied many design concept in this project like
+- clean architecture (use case, input port, interactor, and output port)
+- dependency injection
+- non-anemic domain model
+- domain driven design (entity, value object, service, repository)
+- single responsibility principle 
+- open closed principle
+- interface segregation principle
+
+It also has a features like
+- use decoupling 3 layer architecture
+- integrating log each layer
+- config
+- error code collection
+- modifiable responses code
+- very clear separation of concern
+- fixed, consistent but still flexible code structure
+
 It has one entity (`domain_item/model/entity/item.go`)
 ```go
 type Item struct {
@@ -49,6 +67,9 @@ You can decide to run this application with 3 alternative database
 By default, it is running with **SQLite** db
 
 > in real life, it is very rare to have 3 kind of database in one application. This is just for demonstration purposed
+
+The best part of this architecture is 
+
 
 ## Run backend directly from code using SQLite
 
