@@ -1,23 +1,3 @@
-We applied many design concept in this project like
-- clean architecture (use case, input port, interactor, and output port)
-- dependency inversion principle
-- non-anemic domain model
-- domain driven design (entity, value object, service, repository)
-- single responsibility principle
-- open closed principle
-- interface segregation principle
-
-It also has a features like
-- use decoupling 3 layer architecture
-- integrating log each layer
-- config
-- error code collection
-- modifiable responses code
-- very clear separation of concern
-- fixed, consistent but still flexible code structure
-
-
-
 ## Clean Architecture applied by Gogen Framework 
 ![Gogen Framework Architecture](https://media.licdn.com/dms/image/C5622AQH21VrTSV3EKw/feedshare-shrink_2048_1536/0/1671333904862?e=1678924800&v=beta&t=EEnUpIwS7wWn3ShGk1TvCWAKX-5BskEcszUNe8lX81s)
 

@@ -21,6 +21,8 @@ It also has a features like
 - very clear separation of concern
 - fixed, consistent but still flexible code structure
 
+[For more detail about the feature you can read here](https://github.com/mirzaakhena/theitem/blob/main/FEATURE.md)
+
 It has one entity [`domain_item/model/entity/item.go`](https://github.com/mirzaakhena/theitem/blob/main/domain_item/model/entity/item.go)
 ```go
 type Item struct {
