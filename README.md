@@ -21,7 +21,7 @@ It also has a features like
 - very clear separation of concern
 - fixed, consistent but still flexible code structure
 
-It has one entity (`domain_item/model/entity/item.go`)
+It has one entity [`domain_item/model/entity/item.go`](https://github.com/mirzaakhena/theitem/blob/main/domain_item/model/entity/item.go)
 ```go
 type Item struct {
     ID              vo.ItemID     `json:"id" bson:"_id"`
@@ -38,7 +38,7 @@ type Item struct {
 }
 ```
 
-A six use cases (`domain_item/usecase/`)
+A six use cases [`domain_item/usecase/`](https://github.com/mirzaakhena/theitem/blob/main/domain_item/usecase)
 ```text
 1. getallitem      --> Get All Item with filter
 2. getoneitem      --> Get Only One Item by ID
@@ -48,7 +48,7 @@ A six use cases (`domain_item/usecase/`)
 6. runitemupdate   --> Update an Item
 ```
 
-Each use case, published via REST API using [gin-gonic](https://github.com/gin-gonic/gin) (`domain_item/controller/restapi/router.go`)
+Each use case, published via REST API using [gin-gonic](https://github.com/gin-gonic/gin) [`domain_item/controller/restapi/router.go`](https://github.com/mirzaakhena/theitem/blob/main/domain_item/controller/restapi/router.go)
 ```text
 runitemcreate   --> POST   /api/v1/items             
 getallitem      --> GET    /api/v1/items             
