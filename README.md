@@ -324,7 +324,7 @@ POST   /api/v1/items
 
 REQUEST
 {
-    "name": "the item name",
+    "name": "the first item",
     "rating": 2,
     "category":  "cartoon",
     "image": "http://image.aa",
@@ -349,6 +349,24 @@ RESPONSE FAIL
   "errorMessage": "name length must greater than 10",
   "data": null,
   "traceId": "HO6ONN4SICA1UHTY"
+}
+
+RESPONSE FAIL
+{
+    "success": false,
+    "errorCode": "ER0009",
+    "errorMessage": "item with name 'the first item' already exist",
+    "data": null,
+    "traceId": "3Z1XZGHL1X14YYKD"
+}
+
+RESPONSE FAIL
+{
+    "success": false,
+    "errorCode": "ER0005",
+    "errorMessage": "word 'sex' is not allowed",
+    "data": null,
+    "traceId": "FKSAX0YK1MO6XS82"
 }
 
 RESPONSE FAIL
@@ -516,6 +534,24 @@ RESPONSE FAIL
   "errorMessage": "name length must greater than 10",
   "data": null,
   "traceId": "HO6ONN4SICA1UHTY"
+}
+
+RESPONSE FAIL
+{
+    "success": false,
+    "errorCode": "ER0009",
+    "errorMessage": "item with name 'the first item' already exist",
+    "data": null,
+    "traceId": "47KXZPH5MX84YZZU"
+}
+
+RESPONSE FAIL
+{
+    "success": false,
+    "errorCode": "ER0005",
+    "errorMessage": "word 'sex' is not allowed",
+    "data": null,
+    "traceId": "FKSAX0YK1MO6XS82"
 }
 
 RESPONSE FAIL
