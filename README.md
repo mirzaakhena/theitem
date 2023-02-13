@@ -1,9 +1,9 @@
 # TheItem
 
-This Application developed using gogen framework code generator
+This application developed using gogen framework code generator
 [Gogen Framework](https://github.com/mirzaakhena/gogen)
 
-This application has one entity (`domain_item/model/entity/item.go`)
+It has one entity (`domain_item/model/entity/item.go`)
 ```go
 type Item struct {
     ID              vo.ItemID     `json:"id" bson:"_id"`
@@ -20,7 +20,7 @@ type Item struct {
 }
 ```
 
-Has a six use cases (`domain_item/usecase/`)
+A six use cases (`domain_item/usecase/`)
 ```text
 1. getallitem      --> Get All Item with filter
 2. getoneitem      --> Get Only One Item by ID
@@ -48,9 +48,12 @@ You can decide to run this application with 3 alternative database
 
 By default, it is running with **SQLite** db
 
+> in real life, it is very rare to have 3 kind of database in one application. This is just for demonstration purposed
+
 ## Run backend directly from code using SQLite
 
-After git clone the code, open a terminal (we call it a first terminal), 
+After git clone the code, 
+open a terminal (we named it a 'first terminal'), 
 then download the dependency by call this command
 
 ```shell
@@ -83,10 +86,12 @@ Version 0.0.1
 INFO  0000000000000000 server is running at :8080      restapi.(*gracefullyShutdown).Start:40
 ```
 
-The API is running on port 8080. The port setting is in `config.json`. 
-You can use postman or curl for accessing the API. But it is better to use the UI. Keep reading, because we also provide the UI.
+Now you can use postman or curl for accessing the API. But it is better to use the UI. Keep reading, because we also provide the UI.
+
+Currently, the API is running on port 8080. You may change the port through `config.json`. 
 
 When running with **SQLite** db, we only use the `db_name` field in `config.json` and ignore the other database fields.
+
 ```json
 {
   "database": {
@@ -105,18 +110,18 @@ When running with **SQLite** db, we only use the `db_name` field in `config.json
 ```
 
 ## Run frontend from code independently (development mode)
-This application also has simple user interface (UI) for better experience, interaction or just testing purpose. 
+This application also has a simple user interface (UI) for testing purpose. 
 The UI use all the capability of REST API.
-The frontend application using vue js under `web/` directory. 
-To follow the further instruction of using UI, make sure you already install nodejs in your system.
+It built using vue js stack under `web/` directory. 
+To follow the further instruction of how to installing UI, make sure you already install nodejs in your system.
 
-In order to run the UI, open new second terminal, change directory
+In order to run the UI, open new 'second terminal', change the directory
 
 ```shell 
 $ cd web
 ```
 
-then install the dependency by running this command 
+then install all the dependencies by running this command 
 ```shell
 $ npm install
 ```
@@ -144,10 +149,10 @@ Then you will see this output
 Open your browser then access `http://localhost:5173/web/`
 
 ## Run frontend via backend
-You can run the frontend without running it separately. 
+You can run the frontend without running it separately from backend. 
 In this case the backend will support the frontend as a webserver. 
-All you need to do is build the web package distribution first.
-Stop the frontend application in second terminal (if frontend is still running), 
+All you need to do is build the web app into distribution package.
+Stop the frontend application in 'second terminal' (if frontend is still running), 
 then run this command
 
 ```shell
@@ -155,12 +160,13 @@ $ npm run build
 ```
 The command will create a bundled web application in folder `web/dist/`.
 
-Back to first terminal, stop the backend by `ctrl+c`, then re-run it again
+Back to 'first terminal', stop the backend by `ctrl+c`, then re-run it again
 ```shell
 $ go run main.go appitem
 ```
 
-Now, open your browser then access `http://localhost:8080/web/`
+Now, open your browser then access `http://localhost:8080/web/`.
+Notice that we are only running the backend apps without running the frontend apps.
 
 ## Run backend directly from code using MySQL 
 
@@ -217,30 +223,16 @@ by switching the implementation in `application/app_appitem.go`.
 
 By default (NOT using docker), this application use `config.json`. 
 In docker version, it uses different config which is in `config.prod.json`.
-You can change the setting via `docker-compose.yml`.
+You can change which config to use in `docker-compose.yml` file.
 
-Currently, file `docker-compose.yml` specify 2 database image (mongodb and mysql) and 1 application image (myapp).
+Currently, `docker-compose.yml` file specify 2 database image (mongodb and mysql) and 1 application image (myapp).
 
 ### using Docker and SQLite
-Since **SQLite** is a simple embedded database, we don't need to use any image. 
-By default, it will just run. 
+Since **SQLite** is a embedded database, we don't need to use any docker image. 
+By default, it will just run simply by calling
 
-The current `config.prod.json` for **SQLite**. It only use the `db_name` and ignore all the other database fields.
-```json
-{
-  "database": {
-    "username": "root",
-    "password": "12345",
-    "host": "mysqldb",
-    "port": "3306",
-    "db_name": "itemdb"
-  },
-  "servers": {
-    "appItem": {
-      "address": ":8080"
-    }
-  }
-}
+```shell
+$ docker compose up
 ```
 
 ### using Docker and MySQL
@@ -314,7 +306,6 @@ Open browser then access
 ```shell
 http://localhost:8080/web/
 ```
-
 
 ## Sample Payload
 
