@@ -68,9 +68,6 @@ By default, it is running with **SQLite** db
 
 > in real life, it is very rare to have 3 kind of database in one application. This is just for demonstration purposed
 
-The best part of this architecture is 
-
-
 ## Run backend directly from code using SQLite
 
 After git clone the code, 
