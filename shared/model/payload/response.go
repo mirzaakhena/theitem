@@ -12,6 +12,13 @@ type Response struct {
 	TraceID      string `json:"traceId"`
 }
 
+type ResponseRFC7807 struct {
+	Type   string `json:"type,omitempty"`
+	Title  string `json:"title,omitempty"`
+	Status string `json:"status,omitempty"`
+	Detail string `json:"detail,omitempty"`
+}
+
 func NewSuccessResponse(data any, traceID string) any {
 	var res Response
 	res.Success = true
