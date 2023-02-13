@@ -188,7 +188,7 @@ Notice that we are only running the backend apps without running the frontend ap
 
 ## Run backend directly from code using MySQL 
 
-Open file `application/app_appitem.go` then change the code, from this
+Open file [`application/app_appitem.go`](https://github.com/mirzaakhena/theitem/blob/main/application/app_appitem.go) then change the code, from this
 
 ```go
 datasource := withsqlitedb.NewGateway(log, appData, cfg)
