@@ -5,3 +5,4 @@
 *.log
 *.db
 */node_modules/
+itemdb
