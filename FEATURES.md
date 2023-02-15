@@ -3,16 +3,22 @@
 
 ## Dependency Inversion Principle
 
-The Dependency Inversion Principle is a principle of object-oriented design which states that high-level modules should not depend on low-level modules, but both should depend on abstractions. This helps to decouple the implementation details of a system from its higher-level requirements, making it easier to maintain and extend the system over time.
+The Dependency Inversion Principle is a principle of object-oriented design which states that high-level modules should not depend on low-level modules, 
+but both should depend on abstractions. This helps to decouple the implementation details of a system from its higher-level requirements, 
+making it easier to maintain and extend the system over time.
 
-A design pattern that provides a way to implement the Dependency Inversion Principle called as Dependency Injection. It involves injecting the required dependencies into a class, rather than having the class create or manage its own dependencies. The basic idea behind Dependency Injection is to separate the concerns of an object into two parts: the object's behavior and the dependencies it requires to perform that behavior.
+A design pattern that provides a way to implement the Dependency Inversion Principle called as Dependency Injection. 
+It involves injecting the required dependencies into a class, rather than having the class create or manage its own dependencies. 
+The basic idea behind Dependency Injection is to separate the concerns of an object into two parts: the object's behavior and the dependencies it requires to perform that behavior.
 
-In Dependency Injection, the dependencies are provided to the object from the outside, rather than being created or managed internally. This allows for greater flexibility and maintainability, because individual components can be substituted or modified without affecting the rest of the system.
+In Dependency Injection, the dependencies are provided to the object from the outside, rather than being created or managed internally. 
+This allows for greater flexibility and maintainability, because individual components can be substituted or modified without affecting the rest of the system.
 
-There are several ways to implement Dependency Injection, including constructor injection, setter injection, and interface injection. The specific method used depends on the requirements of the system, but the overall goal is to provide a way to manage dependencies in a flexible and maintainable way.
+There are several ways to implement Dependency Injection, including constructor injection, setter injection, and interface injection. 
+The specific method used depends on the requirements of the system, but the overall goal is to provide a way to manage dependencies in a flexible and maintainable way.
 
 In gogen framework, you can find the dependency injection in [`application/app_appitem.go`](https://github.com/mirzaakhena/theitem/blob/main/application/app_appitem.go) as a constructor injection
-where we inject the `datasource` object (which instantiated from various `NewGateway` method) into each `NewUsecase` method (as a constructor).
+where we inject the `datasource` object which instantiated from one one various `NewGateway` method into each `NewUsecase` method (as a constructor).
 ```go
 datasource := withsqlitedb.NewGateway(log, appData, cfg)
 ...
@@ -32,7 +38,7 @@ func NewUsecase(outputPort Outport) Inport {
 }
 ```
 
-So, use case `getAllItemInteractor` depend on `gateway`.
+Use case `getAllItemInteractor` indirectly depend on `gateway`.
 Instead of creating an instance of the `gateway` struct inside the `getAllItemInteractor` struct, 
 the required `gateway` instance is passed into the constructor of the `getAllItemInteractor` struct as a parameter. 
 This is an example of constructor injection, where the dependencies are provided to the object via its constructor. 
@@ -40,7 +46,11 @@ It allows us to use any other implementation of `gateway`.
 
 ## Non Anemic Domain Model
 
-Non Anemic Domain Model is a design pattern in object-oriented programming where the domain objects contain both data and behavior. It is considered to be a more robust and maintainable design, because it follows the Single Responsibility Principle, which states that a class should have only one reason to change. When the behavior of a domain object is implemented inside the object itself, it becomes easier to understand how the object behaves, and how it can be used to solve specific problems.
+Non Anemic Domain Model is a design pattern in object-oriented programming where the domain objects contain both data and behavior. 
+It is considered to be a more robust and maintainable design, because it follows the Single Responsibility Principle, 
+which states that a class should have only one reason to change. 
+When the behavior of a domain object is implemented inside the object itself, 
+it becomes easier to understand how the object behaves, and how it can be used to solve specific problems.
 
 You can find it in many place, mostly in `model/entity` or `model/vo` like
 
@@ -70,13 +80,10 @@ type Item struct {
 }
 
 func (r *Item) Purchase(quantity int) error {
-
 	if r.Availability < quantity {
 		return errorenum.UnavailableItemStock.Var(quantity, r.Availability)
 	}
-
 	r.Availability = r.Availability - quantity
-
 	return nil
 }
 ```
@@ -125,7 +132,9 @@ In other words, this principle suggests that interfaces should be fine-grained a
 
 The Interface Segregation Principle helps to promote the separation of concerns and loose coupling within a software system, making it easier to modify and extend individual components without affecting others.
 
-In gogen framework, you find this principle in every `Outport` interface which compose other interface from `domain_item/model/repository` or `domain_item/model/service`. `Outport` only compose all method that will be used by Interactor.
+In gogen framework, you find this principle in every `Outport` interface which compose other interface from `domain_item/model/repository` or `domain_item/model/service`. 
+It works like extending an interface from another interface.
+`Outport` only compose all method that will be used by Interactor. 
 
 So instead of creating an interface like this :
 
@@ -167,7 +176,7 @@ type DeleteOneItemRepo interface {
 }
 ```
 
-Then `Outport` only compose some of the method. For example in 
+Then `Outport` only compose some method. For example in 
 
 ```go
 // domain_item/usecase/getoneitem
@@ -206,6 +215,21 @@ type Outport interface {
 	repository.FindOneItemByNameRepo
 }
 ```
+
+by this approach, it make the testing easier
+
+## Clean Architecture
+
+Gogen applied clean architecture. From layer dependency perspective we can see that 
+- `use case` layer depend on `model` 
+- `gateway` layer depend on `use case` 
+- `controller` layer depend on `use case`
+- `application` depend on `usecase`, `gateway` and `controller`
+
+Dependency, can be seen by an `import` statement. Or we can prove it by trying to delete some layer. For the example :
+1. if you delete the layer `controller` or `gateway`, the only part who will get an error is `application`, the other layer will not get affected
+2. if you delete the layer `usecase` then layer `application`, `controller` and `gateway` will get an error.
+3. if you delete the `model`, all layer will get an error
 
 
 
