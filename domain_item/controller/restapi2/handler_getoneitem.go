@@ -3,8 +3,6 @@ package restapi2
 import (
 	"context"
 	"net/http"
-	"theitem/domain_item/model/entity"
-	"theitem/domain_item/model/vo"
 	"theitem/domain_item/usecase/getoneitem"
 	"theitem/shared/gogen"
 	"theitem/shared/infrastructure/logger"
@@ -22,11 +20,11 @@ func (r *controller) getOneItemHandler() echo.HandlerFunc {
 	inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
 
 	type request struct {
-		ItemID vo.ItemID `form:"item_id,omitempty,default=0"`
+		InportRequest
 	}
 
 	type response struct {
-		Item *entity.Item `json:"item"`
+		*InportResponse
 	}
 
 	return func(c echo.Context) error {
@@ -43,7 +41,7 @@ func (r *controller) getOneItemHandler() echo.HandlerFunc {
 		}
 
 		var req InportRequest
-		req.ItemID = jsonReq.ItemID
+		req = jsonReq.InportRequest
 
 		r.log.Info(ctx, util.MustJSON(req))
 
@@ -54,7 +52,7 @@ func (r *controller) getOneItemHandler() echo.HandlerFunc {
 		}
 
 		var jsonRes response
-		jsonRes.Item = res.Item
+		jsonRes.InportResponse = res
 
 		r.log.Info(ctx, util.MustJSON(jsonRes))
 		return c.JSON(http.StatusOK, payload.NewSuccessResponse(jsonRes, traceID))

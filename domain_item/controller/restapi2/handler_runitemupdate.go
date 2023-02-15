@@ -9,6 +9,7 @@ import (
 	"theitem/shared/infrastructure/logger"
 	"theitem/shared/model/payload"
 	"theitem/shared/util"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -21,7 +22,7 @@ func (r *controller) runItemUpdateHandler() echo.HandlerFunc {
 	inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
 
 	type request struct {
-		ItemID vo.ItemID `json:"item_id"`
+		InportRequest
 	}
 
 	type response struct {
@@ -41,7 +42,9 @@ func (r *controller) runItemUpdateHandler() echo.HandlerFunc {
 		}
 
 		var req InportRequest
-		req.ItemID = jsonReq.ItemID
+		req = jsonReq.InportRequest
+		req.Now = time.Now()
+		req.ItemID = vo.ItemID(c.Param("item_id"))
 
 		r.log.Info(ctx, util.MustJSON(req))
 

@@ -2,13 +2,14 @@ package restapi2
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"net/http"
-	"theitem/domain_item/model/vo"
 	"theitem/domain_item/usecase/runitemcreate"
 	"theitem/shared/gogen"
 	"theitem/shared/infrastructure/logger"
 	"theitem/shared/model/payload"
 	"theitem/shared/util"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -21,10 +22,11 @@ func (r *controller) runItemCreateHandler() echo.HandlerFunc {
 	inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
 
 	type request struct {
+		InportRequest
 	}
 
 	type response struct {
-		ItemID vo.ItemID `json:"item_id"`
+		*InportResponse
 	}
 
 	return func(c echo.Context) error {
@@ -41,6 +43,9 @@ func (r *controller) runItemCreateHandler() echo.HandlerFunc {
 		}
 
 		var req InportRequest
+		req = jsonReq.InportRequest
+		req.Now = time.Now()
+		req.UUID = uuid.New().String()
 
 		r.log.Info(ctx, util.MustJSON(req))
 
@@ -51,7 +56,7 @@ func (r *controller) runItemCreateHandler() echo.HandlerFunc {
 		}
 
 		var jsonRes response
-		jsonRes.ItemID = res.ItemID
+		jsonRes.InportResponse = res
 
 		r.log.Info(ctx, util.MustJSON(jsonRes))
 		return c.JSON(http.StatusOK, payload.NewSuccessResponse(jsonRes, traceID))

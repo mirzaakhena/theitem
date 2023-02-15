@@ -3,7 +3,6 @@ package restapi2
 import (
 	"context"
 	"net/http"
-	"theitem/domain_item/model/repository"
 	"theitem/domain_item/usecase/getallitem"
 	"theitem/shared/gogen"
 	"theitem/shared/infrastructure/logger"
@@ -21,14 +20,11 @@ func (r *controller) getAllItemHandler() echo.HandlerFunc {
 	inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
 
 	type request struct {
-		Page   int                        `form:"page,omitempty,default=0"`
-		Size   int                        `form:"size,omitempty,default=0"`
-		Filter repository.ItemQueryFilter `form:"filter,omitempty,default=0"`
+		InportRequest
 	}
 
 	type response struct {
-		Count int64 `json:"count"`
-		Items []any `json:"items"`
+		*InportResponse
 	}
 
 	return func(c echo.Context) error {
@@ -45,9 +41,7 @@ func (r *controller) getAllItemHandler() echo.HandlerFunc {
 		}
 
 		var req InportRequest
-		req.Page = jsonReq.Page
-		req.Size = jsonReq.Size
-		req.Filter = jsonReq.Filter
+		req = jsonReq.InportRequest
 
 		r.log.Info(ctx, util.MustJSON(req))
 
@@ -58,8 +52,7 @@ func (r *controller) getAllItemHandler() echo.HandlerFunc {
 		}
 
 		var jsonRes response
-		jsonRes.Count = res.Count
-		jsonRes.Items = res.Items
+		jsonRes.InportResponse = res
 
 		r.log.Info(ctx, util.MustJSON(jsonRes))
 		return c.JSON(http.StatusOK, payload.NewSuccessResponse(jsonRes, traceID))

@@ -47,6 +47,7 @@ func (r *controller) runItemCreateHandler() gin.HandlerFunc {
 		req = jsonReq.InportRequest
 		req.Now = time.Now()
 		req.UUID = uuid.New().String()
+
 		r.log.Info(ctx, util.MustJSON(req))
 
 		res, err := inport.Execute(ctx, req)

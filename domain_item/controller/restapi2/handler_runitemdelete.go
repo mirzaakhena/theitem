@@ -21,7 +21,7 @@ func (r *controller) runItemDeleteHandler() echo.HandlerFunc {
 	inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
 
 	type request struct {
-		ItemID vo.ItemID `json:"item_id"`
+		InportRequest
 	}
 
 	type response struct {
@@ -41,7 +41,8 @@ func (r *controller) runItemDeleteHandler() echo.HandlerFunc {
 		}
 
 		var req InportRequest
-		req.ItemID = jsonReq.ItemID
+		req = jsonReq.InportRequest
+		req.ItemID = vo.ItemID(c.Param("item_id"))
 
 		r.log.Info(ctx, util.MustJSON(req))
 

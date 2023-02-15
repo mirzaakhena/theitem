@@ -21,8 +21,7 @@ func (r *controller) runItemPurchaseHandler() echo.HandlerFunc {
 	inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
 
 	type request struct {
-		ItemID   vo.ItemID `json:"item_id"`
-		Quantity int       `json:"quantity"`
+		InportRequest
 	}
 
 	type response struct {
@@ -42,8 +41,8 @@ func (r *controller) runItemPurchaseHandler() echo.HandlerFunc {
 		}
 
 		var req InportRequest
-		req.ItemID = jsonReq.ItemID
-		req.Quantity = jsonReq.Quantity
+		req = jsonReq.InportRequest
+		req.ItemID = vo.ItemID(c.Param("item_id"))
 
 		r.log.Info(ctx, util.MustJSON(req))
 
