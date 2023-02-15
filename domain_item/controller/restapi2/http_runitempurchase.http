@@ -1,0 +1,7 @@
+POST http://localhost:8000/api/v1/runitempurchase
+Content-Type: application/json
+
+{ 
+  "item_id": "", 
+  "quantity": "", 
+}

@@ -1,0 +1,6 @@
+POST http://localhost:8000/api/v1/runitemupdate
+Content-Type: application/json
+
+{ 
+  "item_id": "", 
+}

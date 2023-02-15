@@ -226,10 +226,52 @@ Gogen applied clean architecture. From layer dependency perspective we can see t
 - `controller` layer depend on `use case`
 - `application` depend on `usecase`, `gateway` and `controller`
 
-Dependency, can be seen by an `import` statement. Or we can prove it by trying to delete some layer. For the example :
+Dependency, can be seen by an `import` statement on each file. Or we can prove it by trying to delete some layer. For the example :
 1. if you delete the layer `controller` or `gateway`, the only part who will get an error is `application`, the other layer will not get affected
 2. if you delete the layer `usecase` then layer `application`, `controller` and `gateway` will get an error.
 3. if you delete the `model`, all layer will get an error
+
+We can see the integration from `application/app_appitem.go`
+
+```go
+func (appItem) Run() error {
+
+	const appName = "appItem"
+
+	cfg := config.ReadConfig()
+
+	appData := gogen.NewApplicationData(appName)
+
+	log := logger.NewSimpleJSONLogger(appData)
+
+	datasource := withsqlitedb.NewGateway(log, appData, cfg)
+	//datasource := withmysqldb.NewGateway(log, appData, cfg)
+	//datasource := withmongodb.NewGateway(log, appData, cfg)
+
+	primaryDriver := restapi.NewController(appData, log, cfg)
+    //primaryDriver := restapi2.NewController(appData, log, cfg)
+
+	primaryDriver.AddUsecase(
+		//
+		getallitem.NewUsecase(datasource),
+		getoneitem.NewUsecase(datasource),
+		runitemcreate.NewUsecase(datasource),
+		runitemdelete.NewUsecase(datasource),
+		runitempurchase.NewUsecase(datasource),
+		runitemupdate.NewUsecase(datasource),
+	)
+
+	primaryDriver.RegisterRouter()
+
+	primaryDriver.Start()
+
+	return nil
+}
+```
+In this project demonstration, we have 
+- 3 alternative gateway (sqlitem, mysql, mongodb)
+- 2 alternative controller (gin, echo)
+
 
 
 
