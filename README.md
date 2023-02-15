@@ -62,7 +62,17 @@ runitemdelete   --> DELETE /api/v1/items/:item_id
 runitempurchase --> POST   /api/v1/items/:item_id/purchase 
 ```
 
-You can decide to run this application with 3 alternative database 
+In this project demonstration, we have
+- 2 alternative controller (gin, echo)
+- 3 alternative gateway (sqlitem, mysql, mongodb)
+
+
+From `controller` you can choose to run this application with 2 alternative web framework.
+1. **Gin** (`domain_item/controller/restapi`)
+2. **Echo** (`domain_item/controller/restapi`)
+
+
+From `gateway`, you can decide to run this application with 3 alternative database 
 
 1. **SQLite** using Gorm (`domain_item/gateway/withmysqldb`)
 2. **MySQL** using Gorm (`domain_item/gateway/withsqlitedb`)
@@ -70,7 +80,10 @@ You can decide to run this application with 3 alternative database
 
 By default, it is running with **SQLite** db
 
-> in real life, it is very rare to have 3 kind of database in one application. This is just for demonstration purposed
+> Disclaimers!
+> 
+> in real life, it is very rare to have 3 alternative of database and/or 2 alternative web framework in one application . 
+> This is just for demonstration purposed
 
 ## Run backend directly from code using SQLite
 

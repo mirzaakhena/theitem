@@ -3,11 +3,11 @@ package restapi2
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 )
 
-func (r *controller) authentication() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func (r *controller) authentication(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
 
 		// tokenInBytes, err := r.JwtToken.VerifyToken(c.GetHeader("token"))
 		// if err != nil {
@@ -25,20 +25,22 @@ func (r *controller) authentication() gin.HandlerFunc {
 		// c.Set("data", dataToken)
 		//
 		// c.AbortWithStatus(http.StatusForbidden)
-		// return
+
+		return next(c)
 
 	}
 }
 
-func (r *controller) authorization() gin.HandlerFunc {
+func (r *controller) authorization(next echo.HandlerFunc) echo.HandlerFunc {
 
-	return func(c *gin.Context) {
+	return func(c echo.Context) error {
 
 		authorized := true
 
 		if !authorized {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
+			return echo.NewHTTPError(http.StatusForbidden)
 		}
+
+		return next(c)
 	}
 }

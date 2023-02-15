@@ -3,16 +3,18 @@ package restapi2
 import (
 	"context"
 	"net/http"
+	"theitem/domain_item/model/entity"
+	"theitem/domain_item/model/vo"
 	"theitem/domain_item/usecase/getoneitem"
 	"theitem/shared/gogen"
 	"theitem/shared/infrastructure/logger"
 	"theitem/shared/model/payload"
 	"theitem/shared/util"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 )
 
-func (r *controller) getOneItemHandler() gin.HandlerFunc {
+func (r *controller) getOneItemHandler() echo.HandlerFunc {
 
 	type InportRequest = getoneitem.InportRequest
 	type InportResponse = getoneitem.InportResponse
@@ -20,12 +22,14 @@ func (r *controller) getOneItemHandler() gin.HandlerFunc {
 	inport := gogen.GetInport[InportRequest, InportResponse](r.GetUsecase(InportRequest{}))
 
 	type request struct {
+		ItemID vo.ItemID `form:"item_id,omitempty,default=0"`
 	}
 
 	type response struct {
+		Item *entity.Item `json:"item"`
 	}
 
-	return func(c *gin.Context) {
+	return func(c echo.Context) error {
 
 		traceID := util.GenerateID(16)
 
@@ -35,26 +39,25 @@ func (r *controller) getOneItemHandler() gin.HandlerFunc {
 		err := c.Bind(&jsonReq)
 		if err != nil {
 			r.log.Error(ctx, err.Error())
-			c.JSON(http.StatusBadRequest, payload.NewErrorResponse(err, traceID))
-			return
+			return c.JSON(http.StatusBadRequest, payload.NewErrorResponse(err, traceID))
 		}
 
 		var req InportRequest
+		req.ItemID = jsonReq.ItemID
 
 		r.log.Info(ctx, util.MustJSON(req))
 
 		res, err := inport.Execute(ctx, req)
 		if err != nil {
 			r.log.Error(ctx, err.Error())
-			c.JSON(http.StatusBadRequest, payload.NewErrorResponse(err, traceID))
-			return
+			return c.JSON(http.StatusBadRequest, payload.NewErrorResponse(err, traceID))
 		}
 
 		var jsonRes response
-		_ = res
+		jsonRes.Item = res.Item
 
 		r.log.Info(ctx, util.MustJSON(jsonRes))
-		c.JSON(http.StatusOK, payload.NewSuccessResponse(jsonRes, traceID))
+		return c.JSON(http.StatusOK, payload.NewSuccessResponse(jsonRes, traceID))
 
 	}
 }

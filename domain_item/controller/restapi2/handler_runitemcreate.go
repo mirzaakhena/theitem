@@ -10,10 +10,10 @@ import (
 	"theitem/shared/model/payload"
 	"theitem/shared/util"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 )
 
-func (r *controller) runItemCreateHandler() gin.HandlerFunc {
+func (r *controller) runItemCreateHandler() echo.HandlerFunc {
 
 	type InportRequest = runitemcreate.InportRequest
 	type InportResponse = runitemcreate.InportResponse
@@ -27,18 +27,17 @@ func (r *controller) runItemCreateHandler() gin.HandlerFunc {
 		ItemID vo.ItemID `json:"item_id"`
 	}
 
-	return func(c *gin.Context) {
+	return func(c echo.Context) error {
 
 		traceID := util.GenerateID(16)
 
 		ctx := logger.SetTraceID(context.Background(), traceID)
 
 		var jsonReq request
-		err := c.BindJSON(&jsonReq)
+		err := c.Bind(&jsonReq)
 		if err != nil {
 			r.log.Error(ctx, err.Error())
-			c.JSON(http.StatusBadRequest, payload.NewErrorResponse(err, traceID))
-			return
+			return c.JSON(http.StatusBadRequest, payload.NewErrorResponse(err, traceID))
 		}
 
 		var req InportRequest
@@ -48,15 +47,14 @@ func (r *controller) runItemCreateHandler() gin.HandlerFunc {
 		res, err := inport.Execute(ctx, req)
 		if err != nil {
 			r.log.Error(ctx, err.Error())
-			c.JSON(http.StatusBadRequest, payload.NewErrorResponse(err, traceID))
-			return
+			return c.JSON(http.StatusBadRequest, payload.NewErrorResponse(err, traceID))
 		}
 
 		var jsonRes response
 		jsonRes.ItemID = res.ItemID
 
 		r.log.Info(ctx, util.MustJSON(jsonRes))
-		c.JSON(http.StatusOK, payload.NewSuccessResponse(jsonRes, traceID))
+		return c.JSON(http.StatusOK, payload.NewSuccessResponse(jsonRes, traceID))
 
 	}
 }
