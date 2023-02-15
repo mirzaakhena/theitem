@@ -66,19 +66,35 @@ In this project demonstration, we have
 - 2 alternative controller (gin, echo)
 - 3 alternative gateway (sqlitem, mysql, mongodb)
 
-
-From `controller` you can choose to run this application with 2 alternative web framework.
+### Controller
+you can choose to run this application with 2 alternative web framework.
 1. **Gin** (`domain_item/controller/restapi`)
 2. **Echo** (`domain_item/controller/restapi`)
 
+See `application/app_appitem.go`
+```go
+primaryDriver := restapi.NewController(appData, log, cfg)
+//primaryDriver := restapi2.NewController(appData, log, cfg)
+```
 
-From `gateway`, you can decide to run this application with 3 alternative database 
+By default, we use **Gin** web framework
+
+### Gateway 
+you can decide to run this application with 3 alternative database 
 
 1. **SQLite** using Gorm (`domain_item/gateway/withmysqldb`)
 2. **MySQL** using Gorm (`domain_item/gateway/withsqlitedb`)
 3. Native **MongoDB** (`domain_item/gateway/withmongodb`)
 
+See `application/app_appitem.go`
+```go
+datasource := withsqlitedb.NewGateway(log, appData, cfg)
+//datasource := withmysqldb.NewGateway(log, appData, cfg)
+//datasource := withmongodb.NewGateway(log, appData, cfg)
+```
 By default, it is running with **SQLite** db
+
+
 
 > Disclaimers!
 > 
