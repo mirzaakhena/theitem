@@ -62,6 +62,32 @@ runitemdelete   --> DELETE /api/v1/items/:item_id
 runitempurchase --> POST   /api/v1/items/:item_id/purchase 
 ```
 
+Project Structure
+```text
+domain_item
+├── controller
+│   ├── restapi
+│   └── restapi2
+├── gateway
+│   ├── shared
+│   ├── withmongodb
+│   ├── withmysqldb
+│   └── withsqlitedb
+├── model
+│   ├── entity
+│   ├── errorenum
+│   ├── repository
+│   ├── service
+│   └── vo
+└── usecase
+    ├── getallitem
+    ├── getoneitem
+    ├── runitemcreate
+    ├── runitemdelete
+    ├── runitempurchase
+    └── runitemupdate
+```
+
 In this project demonstration, we have
 - 2 alternative controller (gin, echo)
 - 3 alternative gateway (sqlitem, mysql, mongodb)
