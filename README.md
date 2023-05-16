@@ -3,7 +3,7 @@
 This application developed using gogen framework code generator
 [Gogen Framework](https://github.com/mirzaakhena/gogen)
 
-![Gogen Framework Architecture](https://media.licdn.com/dms/image/C5622AQH21VrTSV3EKw/feedshare-shrink_2048_1536/0/1671333904862?e=1678924800&v=beta&t=EEnUpIwS7wWn3ShGk1TvCWAKX-5BskEcszUNe8lX81s)
+![Gogen Framework Architecture](https://github.com/mirzaakhena/gogen/blob/master/gogen-architecture-1.png)
 
 We applied many design concept in this project like
 - clean architecture (use case, input port, interactor, and output port)
